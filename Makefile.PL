@@ -17,6 +17,13 @@ use ExtUtils::MakeMaker;
 
 OS_SPECIFIC:
 {
+    LINUX:
+    {
+        $^O =~ /linux/i  or last LINUX;
+	$make_opts{LIBS} = ['-lrt'];
+        last OS_SPECIFIC;
+    }
+
     SOLARIS:
     {
         $^O =~ /solaris/i  or last SOLARIS;

@@ -69,7 +69,10 @@ sub test_attributes
     POSIX::RT::MQ->unlink($testqueue);
     my ($mq, $a1, $a2);
 
-    $a1 = { mq_maxmsg=>128, mq_msgsize=>256 };
+    #$a1 = { mq_maxmsg=>128, mq_msgsize=>256 };
+    # linux has a default maxmsg of 10 for non-privileged users
+    # so use some low suitable whacky numbers
+    $a1 = { mq_maxmsg=>7, mq_msgsize=>251 };
     $mq = POSIX::RT::MQ->open($testqueue, O_RDWR|O_CREAT, 0600, $a1)  or  die "cannot open($testqueue, O_RDWR|O_CREAT, ...): $!\n";
     $a2 = $mq->attr                                                   or  die "cannot attr(): $!\n";
     ($a2->{mq_maxmsg}  == $a1->{mq_maxmsg})                           or  die "mq_maxmsg didn't match\n";
@@ -88,9 +91,14 @@ sub test_blocking
     POSIX::RT::MQ->unlink($testqueue);
     
     my ($mq, $a, $bl);
-    
-    $a = { mq_maxmsg=>128, mq_msgsize=>256 };
+
+    #$a = { mq_maxmsg=>128, mq_msgsize=>256 };
+    # linux has a default maxmsg of 10 for non-privileged users
+    # so use some low suitable whacky numbers
+    $a = { mq_maxmsg=>7, mq_msgsize=>251 };
+    print STDERR "test_attributes 1\n";
     $mq = POSIX::RT::MQ->open($testqueue, O_RDWR|O_CREAT, 0600, $a)   or  die "cannot open($testqueue, O_RDWR|O_CREAT, ...): $!\n";
+    print STDERR "test_attributes 2\n";
 
     # blocking mode here ...
 

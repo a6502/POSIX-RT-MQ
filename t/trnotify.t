@@ -9,7 +9,10 @@ BEGIN
     use vars qw(@tests $testqueue $attr $msg $prio);
     @tests = ( \&test_sighash );
     $testqueue = '/testq_42';
-    $attr = { mq_maxmsg=>16, mq_msgsize=>256 };
+    #$attr = { mq_maxmsg=>16, mq_msgsize=>256 };
+    # linux has a default maxmsg of 10 for non-privileged users
+    # so use some low suitable whacky numbers
+    $attr = { mq_maxmsg=>9, mq_msgsize=>256 };
     ($msg, $prio) = ("A Sample Message!", 1);
 
     plan tests => scalar(@tests);
@@ -33,7 +36,10 @@ sub test_sighash
     POSIX::RT::MQ->unlink($testqueue);
     my $mq = POSIX::RT::MQ->open($testqueue, O_RDWR|O_CREAT, 0600, $attr)  or die "cannot open($testqueue, O_RDWR|O_CREAT, 0600, ...): $!\n";
     
-    $mq->notify()  and die "notify() OK while expected to fail\n";
+    # $mq->notify() and die "notify() OK while expected to fail\n";
+    # WO: my reading of http://pubs.opengroup.org/onlinepubs/007904975/functions/mq_notify.html
+    # WO: is that a null mq_notify on mq without notifications is not an error:
+    $mq->notify() or die "notify() failed while expected to be OK\n";
 
     my $got_usr1 = 0;
     local $SIG{USR1} = sub { $got_usr1 = 1 };
@@ -59,7 +65,9 @@ sub test_sighash
     ($m eq $msg  &&  $p == $prio)   or  die "unexpected message received\n";
 
     # now we should be alredy deregistered from notifications
-    $mq->notify()  and die "notify() OK while expected to fail\n";
+    # $mq->notify()  and die "notify() OK while expected to fail\n";
+    # WO: see note above
+    $mq->notify() or die "notify() failed while expected to be OK\n";
 
     1;
 }

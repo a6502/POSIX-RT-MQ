@@ -10,7 +10,10 @@ BEGIN
     @tests = ( \&test_integrity,
                \&test_nonblocking,
                \&test_blocking );
-    @q_len    = (1, 10, 128);
+    # linux has a default maxmsg of 10 for non-privileged users
+    # so use some low suitable whacky numbers
+    #@q_len    = (1, 10, 128);
+    @q_len    = (1, 5, 10);
     @msg_len  = (1, 128, 1024, 4096);
     $testqueue = '/testq_42';
     
@@ -35,6 +38,7 @@ sub test_integrity
     {
         for my $msg_len (@msg_len)
         {
+            print STDERR "test_integrity { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len }\n";
             my $attr = { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len };
 
             POSIX::RT::MQ->unlink($testqueue);
@@ -63,6 +67,7 @@ sub test_nonblocking
 {
     my $q_len   = $q_len[-1];
     my $msg_len = $msg_len[-1];
+    print STDERR "test_nonblocking { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len }\n";
     my $attr = { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len };
     
     POSIX::RT::MQ->unlink($testqueue);
@@ -89,6 +94,7 @@ sub test_blocking
 {
     my $q_len   = $q_len[-1];
     my $msg_len = $msg_len[-1];
+    print STDERR "test_blocking { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len }\n";
     my $attr    = { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len };
     
     POSIX::RT::MQ->unlink($testqueue);
@@ -98,7 +104,7 @@ sub test_blocking
     {
         my $timeout = '';
         local $SIG{ALRM} = sub { $timeout = 'TIMEOUT' };
-        alarm(5);
+        alarm(3);
         $mq->receive;
         $timeout eq 'TIMEOUT'  or die "receive() didn't block\n";
     }
@@ -115,7 +121,7 @@ sub test_blocking
         my $timeout = '';
         local $SIG{ALRM} = sub { $timeout = 'TIMEOUT' };
         my ($msg, undef) = construct_message($msg_len, 0);
-        alarm(5);
+        alarm(3);
         $mq->send($msg);
         $timeout eq 'TIMEOUT'  or die "send() didn't block\n";
     }
