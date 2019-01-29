@@ -38,7 +38,7 @@ sub test_integrity
     {
         for my $msg_len (@msg_len)
         {
-            print STDERR "test_integrity { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len }\n";
+            #print STDERR "test_integrity { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len }\n";
             my $attr = { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len };
 
             POSIX::RT::MQ->unlink($testqueue);
@@ -67,7 +67,7 @@ sub test_nonblocking
 {
     my $q_len   = $q_len[-1];
     my $msg_len = $msg_len[-1];
-    print STDERR "test_nonblocking { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len }\n";
+    #print STDERR "test_nonblocking { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len }\n";
     my $attr = { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len };
     
     POSIX::RT::MQ->unlink($testqueue);
@@ -94,7 +94,7 @@ sub test_blocking
 {
     my $q_len   = $q_len[-1];
     my $msg_len = $msg_len[-1];
-    print STDERR "test_blocking { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len }\n";
+    #print STDERR "test_blocking { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len }\n";
     my $attr    = { mq_maxmsg=>$q_len, mq_msgsize=>$msg_len };
     
     POSIX::RT::MQ->unlink($testqueue);
