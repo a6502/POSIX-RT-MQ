@@ -14,6 +14,21 @@ use ExtUtils::MakeMaker;
        AUTHOR     => 'Wieger Opmeer <wiegerop@cpan.org>') : ()),
     'DEFINE'      => '', # e.g., '-DHAVE_SOMETHING'
     'INC'         => '', # e.g., '-I/usr/include/other'
+    'LICENSE'  => 'perl',
+    'META_MERGE' => {
+        'meta-spec' => { version => 2 },
+        resources => {
+            bugtracker => {
+                web => 'https://github.com/a6502/POSIX-RT-MQ/issues',
+	    },
+            homepage => 'https://github.com/a6502/POSIX-RT-MQ',
+            repository => {
+                type => 'git',
+                url  => 'https://github.com/a6502/POSIX-RT-MQ.git',
+                web  => 'https://github.com/a6502/POSIX-RT-MQ',
+            },
+        },
+    },
 );
 
 OS_SPECIFIC:

@@ -11,7 +11,7 @@ use Fcntl 'O_NONBLOCK';
 require DynaLoader;
 
 our @ISA = qw(DynaLoader);
-our $VERSION = '0.04_01';
+our $VERSION = '0.04_02';
 
 bootstrap POSIX::RT::MQ $VERSION;
 
