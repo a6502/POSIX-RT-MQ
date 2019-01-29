@@ -10,7 +10,8 @@ use ExtUtils::MakeMaker;
     'PREREQ_PM'	   => {}, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?    
       (ABSTRACT_FROM => 'MQ.pm', 
-       AUTHOR     => 'Ilja Tabachnik <billy@arnis-bsl.com>') : ()),
+       #AUTHOR     => 'Ilja Tabachnik <billy@arnis-bsl.com>') : ()),
+       AUTHOR     => 'Wieger Opmeer <wiegerop@cpan.org>') : ()),
     'DEFINE'      => '', # e.g., '-DHAVE_SOMETHING'
     'INC'         => '', # e.g., '-I/usr/include/other'
 );
