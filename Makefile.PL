@@ -33,16 +33,16 @@ use ExtUtils::MakeMaker;
 
 OS_SPECIFIC:
 {
-    LINUX:
+    DEFAULT:
     {
-        $^O =~ /linux/i  or last LINUX;
+        $^O =~ /^(linux|freebsd|netbsd)$/ or last DEFAULT;
 	$make_opts{LIBS} = ['-lrt'];
         last OS_SPECIFIC;
     }
 
     SOLARIS:
     {
-        $^O =~ /solaris/i  or last SOLARIS;
+        $^O eq 'solaris' or last SOLARIS;
         my $rev = `uname -r`;
         $? == 0  or die "cannot execute 'uname -r'\n";
         if ($rev > 5.6) { $make_opts{LIBS} = ['-lrt'] }
@@ -50,15 +50,23 @@ OS_SPECIFIC:
         last OS_SPECIFIC;
     }
     
+    # fixme: is this still true?
     AIX:
     {
-        $^O =~ /aix/i  or last AIX;
+        $^O eq 'aix' or last AIX;
         warn "\nPOSIX message queues are not supported in $^O.\n".
              "You are likely to be able to compile this module but any\n".
              "calls will fail with 'Function not implemented' error.\n".
              "However you may try ...\n\n";
         $make_opts{LIBS} = [];
         last OS_SPECIFIC;
+    }
+
+    WINDOWS:
+    {
+        $^O eq 'MSWin32' or last WINDOWS;
+        warn "\nPOSIX message queues are not supported in $^O.\n";
+	exit(0);
     }
     
     UNKNOWN:
