@@ -4,6 +4,16 @@ use warnings;
 use strict;
 
 use Test;
+
+sub _mq_avail {
+    # currently only for freebsd
+    return 1 unless $^O =~ /^(freebsd)$/;
+    my $mqfs = `mount | fgrep mqueuefs`;
+    return 1 if $mqfs and $mqfs =~ 'mqueuefs';
+    warn "skipping tests becasue mqueuefs is not mounted";
+    return 0;
+}
+
 BEGIN 
 {     
     use vars qw(@tests $testqueue $attr $msg $prio);
@@ -14,6 +24,11 @@ BEGIN
     # so use some low suitable whacky numbers
     $attr = { mq_maxmsg=>9, mq_msgsize=>256 };
     ($msg, $prio) = ("A Sample Message!", 1);
+
+    unless (_mq_avail()) {
+        print "1..0 # Skip: mqueues not available\n";
+        exit 0;
+    }
 
     plan tests => scalar(@tests);
 };

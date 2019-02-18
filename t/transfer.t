@@ -4,6 +4,16 @@ use warnings;
 use strict;
 
 use Test;
+
+sub _mq_avail {
+    # currently only for freebsd
+    return 1 unless $^O =~ /^(freebsd)$/;
+    my $mqfs = `mount | fgrep mqueuefs`;
+    return 1 if $mqfs and $mqfs =~ 'mqueuefs';
+    warn "skipping tests becasue mqueuefs is not mounted";
+    return 0;
+}
+
 BEGIN 
 {     
     use vars qw(@tests $testqueue @q_len @msg_len);
@@ -16,6 +26,11 @@ BEGIN
     @q_len    = (1, 5, 10);
     @msg_len  = (1, 128, 1024, 4096);
     $testqueue = '/testq_42';
+
+    unless (_mq_avail()) {
+        print "1..0 # Skip: mqueues not available\n";
+        exit 0;
+    }
     
     plan tests => scalar(@tests);
 };
