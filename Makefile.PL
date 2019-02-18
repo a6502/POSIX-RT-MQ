@@ -66,7 +66,7 @@ OS_SPECIFIC:
     {
         $^O eq 'MSWin32' or last WINDOWS;
         warn "\nPOSIX message queues are not supported in $^O.\n";
-	exit(0);
+	die "OS unsupported";
     }
     
     UNKNOWN:
