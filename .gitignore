@@ -1,11 +1,12 @@
+/blib/
 /MQ.c
 /MQ.bs
 /Makefile
 /Makefile.old
-/pm_to_blib
-/blib/
 /MYMETA.json
 /MYMETA.yml
+/pm_to_blib
+/POSIX-RT-MQ-*.tar.gz
 *~
 *.o
 *.a
